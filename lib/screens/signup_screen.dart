@@ -61,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 obscureText: _obsecureText,
                 decoration: InputDecoration(
                   hintText: 'Password',
-                  fillColor: Colors.white,
+                  fillColor: Colors.yellow[200],
                   icon: Icon(
                     Icons.lock,
                     color: Colors.black,

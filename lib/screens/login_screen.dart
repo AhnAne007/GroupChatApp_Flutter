@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 
+import 'package:group_chat_app/screens/signup_screen.dart';
 import '../widgets/already_have_an_account.dart';
 import '../widgets/rounded_input_field.dart';
 
@@ -48,7 +48,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 obscureText: _obsecureText,
                 decoration: InputDecoration(
                   hintText: 'Password',
-                  fillColor: Colors.white,
+                  fillColor: Colors.yellow[200],
                   icon: Icon(
                     Icons.lock,
                     color: Colors.black,
