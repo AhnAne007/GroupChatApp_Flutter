@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class AlreadyHaveAnAccountCheck extends StatelessWidget {
   final bool login;
   final Function? press;
@@ -22,11 +21,22 @@ class AlreadyHaveAnAccountCheck extends StatelessWidget {
         ),
         GestureDetector(
           onTap: press as void Function()?,
-          child: Text(
-            login ? "Sign Up" : "Sign In",
-            style: TextStyle(
-              color: Colors.yellow[700],
-              fontWeight: FontWeight.bold,
+          child: Container(
+            padding: EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(29),
+              border: Border.all(
+                color: Colors.grey,
+                width: 3.0,
+              ),
+            ),
+            child: Text(
+              login ? "Sign Up" : "Sign In",
+              style: TextStyle(
+                color: Colors.lightGreenAccent[700],
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         )
