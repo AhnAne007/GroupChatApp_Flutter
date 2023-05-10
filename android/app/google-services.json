@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "849199884911",
+    "project_id": "groupchatappflutter-551cd",
+    "storage_bucket": "groupchatappflutter-551cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849199884911:android:225ad576e6788c7a697b9a",
+        "android_client_info": {
+          "package_name": "com.example.group_chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849199884911-oaqvgto66pqjmobjjnl5rcpjd5a6kj1n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMMjg7GS5gQMEIeh1V8QxQRg_6uhMR6Ho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849199884911-oaqvgto66pqjmobjjnl5rcpjd5a6kj1n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
