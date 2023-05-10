@@ -45,7 +45,8 @@ dependencies:
   pkcs7: ^1.0.3
   secp256k1cipher: ^0.2.7
   file_picker: ^5.2.7
-
+  flutter_otp_text_field: ^1.1.1
+  google_fonts: ^4.0.4
 
 dev_dependencies:
   flutter_test:
