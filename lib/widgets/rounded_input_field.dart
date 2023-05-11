@@ -26,7 +26,7 @@ class RoundedInputField extends StatelessWidget {
               icon,
               color: Colors.black,
             ),
-            fillColor: Colors.yellow[200],
+            fillColor: Colors.green[50],
             hintText: hintText),
       ),
     );
@@ -50,7 +50,7 @@ class TextFieldContainer extends StatelessWidget {
       width: size.width * 0.8,
       //height: 40,
       decoration: BoxDecoration(
-        color: Colors.yellow[200],
+        color: Colors.green[50],
         borderRadius: BorderRadius.circular(29),
       ),
       child: child,

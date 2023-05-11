@@ -23,6 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
 
   //A whole widget tree to make th interface of the SignUp Screen
   @override
@@ -36,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             SizedBox(height: 70,),
             Container(
               width: size.width - 90,
-              height: size.height * 0.4,
+              height: size.height * 0.3,
               child: Image.asset(
                 "assets/signup.png",
                 height: size.height * 0.45,
@@ -55,13 +56,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
               onChanged: (String value) {},
               textEditingController: _emailController,
             ),
+            RoundedInputField(
+              textEditingController: _phoneNumberController,
+              hintText: 'Phone#',
+              icon: Icons.phone,
+              onChanged: (String value) {},
+            ),
             TextFieldContainer(
               child: TextField(
                 controller: _passwordController,
                 obscureText: _obsecureText,
                 decoration: InputDecoration(
                   hintText: 'Password',
-                  fillColor: Colors.yellow[200],
+                  fillColor: Colors.green[50],
                   icon: Icon(
                     Icons.lock,
                     color: Colors.black,
@@ -86,7 +93,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Colors.greenAccent[400],

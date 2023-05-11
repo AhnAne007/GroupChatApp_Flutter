@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             ),
           )),
       //Below will be called on the basis of authentication if User is Logged in or Not
-      home: OtpScreen(),
+      home: LogInScreen(),
     );
   }
 }

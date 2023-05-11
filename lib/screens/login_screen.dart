@@ -17,6 +17,8 @@ class _LogInScreenState extends State<LogInScreen> {
   late bool _obsecureText = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class _LogInScreenState extends State<LogInScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 100,),
+            SizedBox(height: 70,),
             Container(
               width: size.width - 90,
               height: size.height * 0.4,
@@ -42,13 +44,19 @@ class _LogInScreenState extends State<LogInScreen> {
               icon: Icons.person,
               onChanged: (String value) {},
             ),
+            RoundedInputField(
+              textEditingController: _phoneNumberController,
+              hintText: 'Phone#',
+              icon: Icons.phone,
+              onChanged: (String value) {},
+            ),
             TextFieldContainer(
               child: TextField(
                 controller: _passwordController,
                 obscureText: _obsecureText,
                 decoration: InputDecoration(
                   hintText: 'Password',
-                  fillColor: Colors.yellow[200],
+                  fillColor: Colors.green[50],
                   icon: Icon(
                     Icons.lock,
                     color: Colors.black,
@@ -73,7 +81,7 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Colors.greenAccent[400],
