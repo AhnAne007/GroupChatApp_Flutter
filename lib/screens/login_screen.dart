@@ -28,10 +28,19 @@ class _LogInScreenState extends State<LogInScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 70,),
+            SizedBox(height: 40,),
+            SizedBox(
+              width: 180,
+              height: 100,
+              child: Image.asset(
+                "assets/chatlogo.png",
+                height: size.height * 0.45,
+                width: 30,
+              ),
+            ),
             Container(
               width: size.width - 90,
-              height: size.height * 0.4,
+              height: size.height * 0.3,
               child: Image.asset(
                 "assets/login.png",
                 height: size.height * 0.45,
