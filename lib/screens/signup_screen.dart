@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 
+import '../resources/auth_methods.dart';
 import '../widgets/already_have_an_account.dart';
 import '../widgets/rounded_input_field.dart';
 import 'login_screen.dart';
@@ -34,7 +34,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 70,),
+            SizedBox(
+              height: 70,
+            ),
             Container(
               width: size.width - 90,
               height: size.height * 0.3,
@@ -99,38 +101,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     primary: Colors.greenAccent[400],
                     //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                     textStyle:
-                    TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                 onPressed: (){},// async {
-                //   String res = await AuthMethods().signUpUser(
-                //       email: _emailController.text,
-                //       password: _passwordController.text,
-                //       username: _usernameController.text);
-                //
-                //   if (res == "Success") {
-                //     ClearFields();
-                //     final snackBar = SnackBar(
-                //       content: const Text('User Registered!'),
-                //       action: SnackBarAction(
-                //         label: 'OK',
-                //         onPressed: () {
-                //           // Some code to undo the change.
-                //         },
-                //       ),
-                //     );
-                //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                //   } else {
-                //     final snackBar = SnackBar(
-                //       content: const Text('Username or Password is Empty!'),
-                //       action: SnackBarAction(
-                //         label: 'OK',
-                //         onPressed: () {
-                //           // Some code to undo the change.
-                //         },
-                //       ),
-                //     );
-                //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                //   }
-                // },
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                onPressed: () async {
+                  //below is the class that runs a method for the User to be added in the database
+                  //this is used for the SignUp of the new user
+                  String res = await AuthMethods().signUpUser(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      username: _usernameController.text,
+                      phonenumber: _phoneNumberController.text);
+                  if (res == "Success") {
+                    ClearFields();
+                    final snackBar = SnackBar(
+                      content: const Text('User Registered!'),
+                      action: SnackBarAction(
+                        label: 'OK',
+                        onPressed: () {
+                          // Some code to undo the change.
+                        },
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else {
+                    final snackBar = SnackBar(
+                      content: const Text('Username or Password is Empty!'),
+                      action: SnackBarAction(
+                        label: 'OK',
+                        onPressed: () {
+                          // Some code to undo the change.
+                        },
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
                 child: Text(
                   "Sign up".toUpperCase(),
                   style: TextStyle(color: Colors.white),
@@ -161,5 +165,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController.text = "";
     _passwordController.text = "";
     _usernameController.text = "";
+    _phoneNumberController.text = "";
   }
 }

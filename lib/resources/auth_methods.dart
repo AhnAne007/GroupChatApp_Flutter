@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 // now this file contains the class that has the Methods
 // to call from firebase and use authentication methods.
@@ -8,10 +9,14 @@ class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late User user;
+  var verificationId = '';
 
   //Method for SignUp User or Register New User
   Future<String> signUpUser(
-      {required String email, required String password, required String username}) async {
+      {required String email,
+      required String password,
+      required String username,
+      required String phonenumber}) async {
     String res = "Some Error Occured";
     try {
       if (email.isNotEmpty || password.isNotEmpty) {
@@ -26,11 +31,12 @@ class AuthMethods {
           "email": email,
           "status": "Unavailable",
           "uid": _auth.currentUser?.uid,
+          "phonenumber": phonenumber,
         });
 
         //Below is used to get the User Object to use it's Display name later in chat screen
         // or anywhere in the whole app.
-        user =(await _auth.currentUser)!;
+        user = (await _auth.currentUser)!;
         user?.updateProfile(displayName: username);
         ;
       }
@@ -57,12 +63,12 @@ class AuthMethods {
   }
 
   //Method to give the Username of current LoggedIn user
-  String? giveUserName(){
+  String? giveUserName() {
     return _auth.currentUser!.displayName;
   }
 
   //Method to give the Email of current LoggedIn user
-  String? giveUserEmail(){
+  String? giveUserEmail() {
     return _auth.currentUser!.email;
   }
 
@@ -76,10 +82,34 @@ class AuthMethods {
       await _auth.signOut();
 
       res = "Success";
-    }
-    catch (err) {
+    } catch (err) {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<void> phoneAuthentication(String phoneNumber) async {
+    await _auth.verifyPhoneNumber(
+      verificationCompleted: (credential) async {
+        _auth.signInWithCredential(credential);
+      },
+      codeSent: (verificationId, codeSent) {
+        this.verificationId = verificationId;
+      },
+      codeAutoRetrievalTimeout: (verificationId) {
+        this.verificationId = verificationId;
+      },
+      verificationFailed: (e) {
+        if (e.code == 'invalid-phone-number') {
+          print('Wrong Phone Number');
+        }
+      },
+    );
+  }
+
+  Future<bool> verifyOtp(String otp) async {
+    var credentials = await _auth.signInWithCredential(PhoneAuthProvider.credential(
+        verificationId: this.verificationId, smsCode: otp));
+    return credentials.user !=null ? true : false;
   }
 }
