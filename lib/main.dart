@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:group_chat_app/screens/home_page.dart';
 import 'package:group_chat_app/screens/login_screen.dart';
 
 Future main() async {
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
             ),
           )),
       //Below will be called on the basis of authentication if User is Logged in or Not
-      home: LogInScreen(),
+      home: HomePage(),
     );
   }
 }

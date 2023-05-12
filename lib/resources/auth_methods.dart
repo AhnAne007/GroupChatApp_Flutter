@@ -31,6 +31,7 @@ class AuthMethods {
           "status": "Unavailable",
           "uid": _auth.currentUser?.uid,
           "phonenumber": phonenumber,
+          "groups":[],
         });
 
         //Below is used to get the User Object to use it's Display name later in chat screen
