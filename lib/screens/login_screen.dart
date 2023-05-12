@@ -22,7 +22,6 @@ class _LogInScreenState extends State<LogInScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -31,7 +30,9 @@ class _LogInScreenState extends State<LogInScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 40,),
+            SizedBox(
+              height: 40,
+            ),
             SizedBox(
               width: 180,
               height: 100,
@@ -99,35 +100,34 @@ class _LogInScreenState extends State<LogInScreen> {
                     primary: Colors.lightGreenAccent[400],
                     //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                     textStyle:
-                    TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                 onPressed: () async {
-                   String res = await AuthMethods().loginUser(
-                       email: _emailController.text,
-                       password: _passwordController.text);
-                   if (res == "Success") {
-                     ClearFields();
-                     Navigator.push(
-                       context,
-                       MaterialPageRoute(
-                         builder: (context) {
-                           return HomePage();
-                         },
-                       ),
-                     );
-                   } else {
-                     final snackBar = SnackBar(
-                       content: const Text('User Not Found!'),
-                       action: SnackBarAction(
-                         label: 'OK',
-                         onPressed: () {
-                           // Some code to undo the change.
-                         },
-                       ),
-                     );
-                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                   }
-
-                 },// async {
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                onPressed: () async {
+                  String res = await AuthMethods().loginUser(
+                      email: _emailController.text,
+                      password: _passwordController.text);
+                  if (res == "Success") {
+                    ClearFields();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return HomePage();
+                        },
+                      ),
+                    );
+                  } else {
+                    final snackBar = SnackBar(
+                      content: const Text('User Not Found!'),
+                      action: SnackBarAction(
+                        label: 'OK',
+                        onPressed: () {
+                          // Some code to undo the change.
+                        },
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                }, // async {
 
                 // },
                 child: Text(
@@ -158,7 +158,6 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  //A function to clear fields for the better user experience.
   void ClearFields() {
     _emailController.text = "";
     _passwordController.text = "";

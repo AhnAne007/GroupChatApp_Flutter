@@ -97,19 +97,6 @@ class _HomePageState extends State<HomePage> {
               userMap?.isEmpty == false
                   ? ListTile(
                 onTap: () {
-                  // print("just before the chatRoomId");
-                  // String roomId = chatRoomId(
-                  //     AuthMethods().giveUserName() as String,
-                  //     userMap!['name']);
-                  //
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(
-                  //     builder: (_) => ChatScreen(
-                  //       chatRoomId: roomId,
-                  //       userMap: userMap!,
-                  //     ),
-                  //   ),
-                  // );
                 },
                 leading: Icon(Icons.account_box, color: Colors.black),
                 title: Text(

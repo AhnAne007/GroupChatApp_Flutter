@@ -16,8 +16,6 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  //Some fields to be used in the class.
-  //A bool to check and uncheck the Password area.
   late bool _obsecureText = true;
 
   //Some controllers to control the text fields.
@@ -26,7 +24,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
 
-  //A whole widget tree to make th interface of the SignUp Screen
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -159,7 +156,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  //A function to clear out the fields for better user experience
   void ClearFields() {
     _emailController.text = "";
     _passwordController.text = "";

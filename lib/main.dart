@@ -13,8 +13,6 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   //#7CF500
-//  The color code to be used later on
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,8 +37,7 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           )),
-      //Below will be called on the basis of authentication if User is Logged in or Not
-      home: HomePage(),
+      home: LogInScreen(),
     );
   }
 }

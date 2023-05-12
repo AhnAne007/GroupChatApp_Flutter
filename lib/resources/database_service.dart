@@ -15,12 +15,6 @@ class DatabaseService {
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection("groups");
 
-  // Future<QuerySnapshot> gettingUserData(String email) async {
-  //   QuerySnapshot snapshot =
-  //       await userCollection.where("email", isEqualTo: email).get();
-  //   return snapshot;
-  // }
-
   String? giveUserName() {
     return _auth.currentUser!.displayName;
   }
@@ -29,7 +23,6 @@ class DatabaseService {
     return _auth.currentUser!.email;
   }
 
-  //a method to set the status of the user Online or Offline.
   void setStatus(String status) async {
     await userCollection
         .doc(_auth.currentUser!.uid)
