@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:group_chat_app/screens/otp_screen.dart';
 
 import 'package:group_chat_app/screens/signup_screen.dart';
+import '../resources/auth_methods.dart';
 import '../widgets/already_have_an_account.dart';
 import '../widgets/rounded_input_field.dart';
+import 'home_page.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({
@@ -93,36 +96,39 @@ class _LogInScreenState extends State<LogInScreen> {
               padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.greenAccent[400],
+                    primary: Colors.lightGreenAccent[400],
                     //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                     textStyle:
                     TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                 onPressed: (){},// async {
-                //   String res = await AuthMethods().loginUser(
-                //       email: _emailController.text,
-                //       password: _passwordController.text);
-                //   if (res == "Success") {
-                //     ClearFields();
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) {
-                //           return HomeScreen();
-                //         },
-                //       ),
-                //     );
-                //   } else {
-                //     final snackBar = SnackBar(
-                //       content: const Text('User Not Found!'),
-                //       action: SnackBarAction(
-                //         label: 'OK',
-                //         onPressed: () {
-                //           // Some code to undo the change.
-                //         },
-                //       ),
-                //     );
-                //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                //   }
+                 onPressed: () async {
+                   String res = await AuthMethods().loginUser(
+                       email: _emailController.text,
+                       password: _passwordController.text);
+                   if (res == "Success") {
+                     ClearFields();
+                     Navigator.push(
+                       context,
+                       MaterialPageRoute(
+                         builder: (context) {
+                           return HomePage();
+                         },
+                       ),
+                     );
+                   } else {
+                     final snackBar = SnackBar(
+                       content: const Text('User Not Found!'),
+                       action: SnackBarAction(
+                         label: 'OK',
+                         onPressed: () {
+                           // Some code to undo the change.
+                         },
+                       ),
+                     );
+                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                   }
+
+                 },// async {
+
                 // },
                 child: Text(
                   "Login".toUpperCase(),
@@ -158,3 +164,5 @@ class _LogInScreenState extends State<LogInScreen> {
     _passwordController.text = "";
   }
 }
+
+//await AuthMethods().phoneAuthentication(_phoneNumberController.text);

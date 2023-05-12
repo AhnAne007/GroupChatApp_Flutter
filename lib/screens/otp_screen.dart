@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:group_chat_app/resources/auth_methods.dart';
+import 'package:group_chat_app/screens/home_page.dart';
+
+import 'login_screen.dart';
 
 class OtpScreen extends StatelessWidget {
   const OtpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color accentPurpleColor = Color(0xFF6A53A1);
+    String otpCode = '';
     Color accentDarkGreenColor = Color(0xFF99EC1D);
     return Scaffold(
         body: Container(
@@ -45,11 +49,10 @@ class OtpScreen extends StatelessWidget {
             //showFieldAsBox: false,
             //borderWidth: 4.0,
             //runs when a code is typed in
-            onCodeChanged: (String code) {
-              //handle validation or checks here if necessary
-            },
             //runs when every textfield is filled
-            onSubmit: (String verificationCode) {},
+            onSubmit: (String verificationCode) {
+              otpCode = verificationCode;
+            },
           ),
           SizedBox(height: 20,),
           SizedBox(
@@ -59,7 +62,23 @@ class OtpScreen extends StatelessWidget {
                   backgroundColor: Colors.lightGreenAccent[400],
                   textStyle:
                   TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-              onPressed: () {},
+              onPressed: () {
+                AuthMethods().verifyOtp(otpCode)==true ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return HomePage();
+                    },
+                  ),
+                ) : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LogInScreen();
+                    },
+                  ),
+                );
+              },
               child: Text("NEXT"),
             ),
           ),

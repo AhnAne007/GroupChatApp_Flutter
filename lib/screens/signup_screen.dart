@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../resources/auth_methods.dart';
@@ -98,13 +99,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
               padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.greenAccent[400],
+                    backgroundColor: Colors.lightGreenAccent[400],
                     //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                     textStyle:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 onPressed: () async {
-                  //below is the class that runs a method for the User to be added in the database
-                  //this is used for the SignUp of the new user
                   String res = await AuthMethods().signUpUser(
                       email: _emailController.text,
                       password: _passwordController.text,
@@ -168,3 +167,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _phoneNumberController.text = "";
   }
 }
+
+// await FirebaseAuth.instance.verifyPhoneNumber(
+// phoneNumber: _phoneNumberController.text,
+// verificationCompleted: (PhoneAuthCredential credential) {},
+// verificationFailed: (FirebaseAuthException e) {},
+// codeSent: (String verificationId, int? resendToken) {},
+// codeAutoRetrievalTimeout: (String verificationId) {},
+// );
+
+//await AuthMethods().phoneAuthentication(_phoneNumberController.text);

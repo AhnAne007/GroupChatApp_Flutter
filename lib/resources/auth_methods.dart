@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 // now this file contains the class that has the Methods
 // to call from firebase and use authentication methods.
@@ -88,13 +87,17 @@ class AuthMethods {
     return res;
   }
 
-  Future<void> phoneAuthentication(String phoneNumber) async {
+  Future<String> phoneAuthentication(String phoneNumber) async {
+    String res = '';
     await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
       verificationCompleted: (credential) async {
         _auth.signInWithCredential(credential);
+        res = "Success";
       },
       codeSent: (verificationId, codeSent) {
         this.verificationId = verificationId;
+        res = "Success";
       },
       codeAutoRetrievalTimeout: (verificationId) {
         this.verificationId = verificationId;
@@ -102,14 +105,17 @@ class AuthMethods {
       verificationFailed: (e) {
         if (e.code == 'invalid-phone-number') {
           print('Wrong Phone Number');
+          res = "Wrong Phone Number";
         }
       },
     );
+    return res;
   }
 
   Future<bool> verifyOtp(String otp) async {
-    var credentials = await _auth.signInWithCredential(PhoneAuthProvider.credential(
-        verificationId: this.verificationId, smsCode: otp));
-    return credentials.user !=null ? true : false;
+    var credentials = await _auth.signInWithCredential(
+        PhoneAuthProvider.credential(
+            verificationId: this.verificationId, smsCode: otp));
+    return credentials.user != null ? true : false;
   }
 }
