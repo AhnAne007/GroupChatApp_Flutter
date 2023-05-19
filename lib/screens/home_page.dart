@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:group_chat_app/resources/database_service.dart';
+import 'package:group_chat_app/screens/search_screen.dart';
+import 'package:group_chat_app/widgets/floating_button_options.dart';
 
 import '../resources/auth_methods.dart';
 import '../widgets/group_tile_widget.dart';
@@ -28,54 +30,6 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   String groupName = "";
   String userName = "";
-
-  void searchUser() async {
-    await firebaseFirestore
-        .collection("users")
-        .where("name", isEqualTo: _searchController.text)
-        .get()
-        .then((value) {
-      setState(() {
-        userMap = value.docs[0].data();
-        print(userMap);
-      });
-    });
-  }
-
-  initiateSearchMethod() async {
-    if (_searchController.text.isNotEmpty) {
-      setState(() {
-        _isLoading = true;
-      });
-      await DatabaseService()
-          .searchByName(_searchController.text)
-          .then((snapshot) {
-        setState(() {
-          searchSnapshot = snapshot;
-          _isLoading = false;
-          //hasUserSearched = true;
-        });
-      });
-    }
-  }
-
-  groupListFromDatabase() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: searchSnapshot!.docs.length,
-      itemBuilder: (context, index) {
-        // return groupTileFromDatabase(
-        //   userName,
-        //   searchSnapshot!.docs[index]['groupId'],
-        //   searchSnapshot!.docs[index]['groupName'],
-        //   searchSnapshot!.docs[index]['admin'],
-        // );
-      },
-    );
-  }
-
-
-
 
   String getId(String res) {
     return res.substring(0, res.indexOf("_"));
@@ -105,36 +59,36 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Colors.lime[50],
-        appBar: AppBar(
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  await AuthMethods().loginOut();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return LogInScreen();
-                      },
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.logout)),
-          ],
-          backgroundColor: Colors.lightGreenAccent[700],
-          centerTitle: true,
-          title: const Text("Chats"),
-        ),
-        body: groupListFromAdmin(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: Colors.deepOrangeAccent,
-          child: Icon(
-            Icons.add,
-            size: 30,
-          ),
-        ));
+      backgroundColor: Colors.lime[50],
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await AuthMethods().loginOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LogInScreen();
+                    },
+                  ),
+                );
+              },
+              icon: const Icon(Icons.logout)),
+        ],
+        backgroundColor: Colors.lightGreenAccent[700],
+        centerTitle: true,
+        title: const Text("Chats"),
+      ),
+      body: groupListFromAdmin(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.deepOrange,
+        onPressed: () {
+          popUpDialog(context);
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 
   popUpDialog(BuildContext context) {
@@ -234,15 +188,9 @@ class _HomePageState extends State<HomePage> {
                         width: size.width - 90,
                         height: size.height * 0.01,
                       ),
-                      RoundedInputField(
-                        textEditingController: _searchController,
-                        hintText: 'Search the group',
-                        icon: Icons.search,
-                        onChanged: (String value) {},
-                      ),
                       Container(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 150, vertical: 10),
+                            EdgeInsets.symmetric(horizontal: 100, vertical: 10),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.lightGreenAccent[400],
@@ -250,10 +198,17 @@ class _HomePageState extends State<HomePage> {
                               textStyle: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.bold)),
                           onPressed: () {
-                            searchUser();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return SearchScreen();
+                                },
+                              ),
+                            );
                           },
                           child: Text(
-                            "Search".toUpperCase(),
+                            "Go To Search Page".toUpperCase(),
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -274,15 +229,9 @@ class _HomePageState extends State<HomePage> {
                     width: size.width - 90,
                     height: size.height * 0.01,
                   ),
-                  RoundedInputField(
-                    textEditingController: _searchController,
-                    hintText: 'Search the group',
-                    icon: Icons.search,
-                    onChanged: (String value) {},
-                  ),
                   Container(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 150, vertical: 10),
+                        EdgeInsets.symmetric(horizontal: 100, vertical: 10),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.lightGreenAccent[400],
@@ -290,10 +239,17 @@ class _HomePageState extends State<HomePage> {
                           textStyle: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       onPressed: () {
-                        searchUser();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return SearchScreen();
+                            },
+                          ),
+                        );
                       },
                       child: Text(
-                        "Search".toUpperCase(),
+                        "Go To Search Page".toUpperCase(),
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -344,6 +300,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-

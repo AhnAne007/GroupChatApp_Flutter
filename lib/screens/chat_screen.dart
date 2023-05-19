@@ -63,7 +63,6 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  //A function to upload a file in firebase storage
   Future onUploadFile() async {
     try {
       final path = 'files/${pickedFile?.name}';
