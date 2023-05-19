@@ -24,7 +24,7 @@ class _GroupTileState extends State<GroupTile> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) =>  ChatPage(
+            builder: (_) =>  ChatScreen(
               groupId: widget.groupId,
               groupName: widget.groupName,
               userName: widget.userName,

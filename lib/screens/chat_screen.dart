@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import '../resources/database_service.dart';
 import '../widgets/message_tile_widget.dart';
 
-class ChatPage extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   final String groupId;
   final String groupName;
   final String userName;
-  const ChatPage(
+  const ChatScreen(
       {Key? key,
         required this.groupId,
         required this.groupName,
@@ -20,10 +20,10 @@ class ChatPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatScreenState extends State<ChatScreen> {
   Stream<QuerySnapshot>? chats;
   String admin = "";
   final TextEditingController _message = TextEditingController();
