@@ -28,7 +28,6 @@ class _HomePageState extends State<HomePage> {
   String groupName = "";
   String userName = "";
 
-
   void searchUser() async {
     await firebaseFirestore
         .collection("users")
@@ -50,7 +49,6 @@ class _HomePageState extends State<HomePage> {
     return res.substring(res.indexOf("_") + 1);
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -69,9 +67,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.lime[50],
         appBar: AppBar(
@@ -100,9 +96,9 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.deepOrangeAccent,
           child: Icon(
             Icons.add,
-            size: 30,),
-        )
-    );
+            size: 30,
+          ),
+        ));
   }
 
   popUpDialog(BuildContext context) {
@@ -121,36 +117,30 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   _isLoading == true
                       ? Center(
-                    child: CircularProgressIndicator(
-                        color: Theme
-                            .of(context)
-                            .primaryColor),
-                  )
+                          child: CircularProgressIndicator(
+                              color: Theme.of(context).primaryColor),
+                        )
                       : TextField(
-                    onChanged: (val) {
-                      setState(() {
-                        groupName = val;
-                      });
-                    },
-                    style: const TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor),
-                            borderRadius: BorderRadius.circular(20)),
-                        errorBorder: OutlineInputBorder(
-                            borderSide:
-                            const BorderSide(color: Colors.red),
-                            borderRadius: BorderRadius.circular(20)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor),
-                            borderRadius: BorderRadius.circular(20))),
-                  ),
+                          onChanged: (val) {
+                            setState(() {
+                              groupName = val;
+                            });
+                          },
+                          style: const TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColor),
+                                  borderRadius: BorderRadius.circular(20)),
+                              errorBorder: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(20)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColor),
+                                  borderRadius: BorderRadius.circular(20))),
+                        ),
                 ],
               ),
               actions: [
@@ -159,9 +149,7 @@ class _HomePageState extends State<HomePage> {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                      primary: Theme
-                          .of(context)
-                          .primaryColor),
+                      primary: Theme.of(context).primaryColor),
                   child: const Text("CANCEL"),
                 ),
                 ElevatedButton(
@@ -171,9 +159,9 @@ class _HomePageState extends State<HomePage> {
                         _isLoading = true;
                       });
                       DatabaseService(
-                          uid: FirebaseAuth.instance.currentUser!.uid)
+                              uid: FirebaseAuth.instance.currentUser!.uid)
                           .createGroup(userName,
-                          FirebaseAuth.instance.currentUser!.uid, groupName)
+                              FirebaseAuth.instance.currentUser!.uid, groupName)
                           .whenComplete(() {
                         _isLoading = false;
                       });
@@ -183,9 +171,7 @@ class _HomePageState extends State<HomePage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                      primary: Theme
-                          .of(context)
-                          .primaryColor),
+                      primary: Theme.of(context).primaryColor),
                   child: const Text("CREATE"),
                 )
               ],
@@ -194,71 +180,74 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-
   groupList() {
-    Size size = MediaQuery
-        .of(context)
-        .size;
-    return Center(
-        child: Column(
-        children: [
-        Container(
-        width: size.width - 90,
-        height: size.height * 0.01,
-    ),
-    RoundedInputField(
-    textEditingController: _searchController,
-    hintText: 'Search by email',
-    icon: Icons.search,
-    onChanged: (String value) {},
-    ),
-    Container(
-    padding: EdgeInsets.symmetric(horizontal: 150, vertical: 10),
-    child: ElevatedButton(
-    style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.lightGreenAccent[400],
+    Size size = MediaQuery.of(context).size;
+    return
+      StreamBuilder(
+        stream: groups,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data['groups'] != null) {
+              if (snapshot.data['groups'].length != 0) {
+                return ListView.builder(
+                  itemCount: snapshot.data['groups'].length,
+                  itemBuilder: (context, index) {
+                    int reverseIndex =
+                        snapshot.data['groups'].length - index - 1;
+                    return Column(
+                      children: [
+                        Container(
+                          width: size.width - 90,
+                          height: size.height * 0.01,
+                        ),
+                        RoundedInputField(
+                          textEditingController: _searchController,
+                          hintText: 'Search by email',
+                          icon: Icons.search,
+                          onChanged: (String value) {},
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 150, vertical: 10),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.lightGreenAccent[400],
 //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-    textStyle:
-    TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-    onPressed: () {
-    searchUser();
-    },
-    child: Text(
-    "Search".toUpperCase(),
-    style: TextStyle(color: Colors.white),
-    ),
-    ),
-    ),StreamBuilder(
-    stream: groups,
-    builder: (context, AsyncSnapshot snapshot) {
-    // make some checks
-    if (snapshot.hasData) {
-    if (snapshot.data['groups'] != null) {
-    if (snapshot.data['groups'].length != 0) {
-    return ListView.builder(
-    itemCount: snapshot.data['groups'].length,
-    itemBuilder: (context, index) {
-    int reverseIndex = snapshot.data['groups'].length - index - 1;
-    return GroupTile(
-    groupId: getId(snapshot.data['groups'][reverseIndex]),
-    groupName: getName(snapshot.data['groups'][reverseIndex]),
-    userName: snapshot.data['name']);
-    },
-    );
-    } else {
-    return noGroupWidget();
-    }
-    } else {
-    return noGroupWidget();
-    }
-    } else {
-    return Center(
-    child: CircularProgressIndicator(
-    color: Theme.of(context).primaryColor),
-    );
-    }
-    },
-    ),),);
+                                textStyle: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            onPressed: () {
+                              searchUser();
+                            },
+                            child: Text(
+                              "Search".toUpperCase(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        GroupTile(
+                            groupId:
+                                getId(snapshot.data['groups'][reverseIndex]),
+                            groupName:
+                                getName(snapshot.data['groups'][reverseIndex]),
+                            userName: snapshot.data['name']),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                return noGroupWidget();
+              }
+            } else {
+              return noGroupWidget();
+            }
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor),
+            );
+          }
+        },
+      );
   }
 
   noGroupWidget() {
@@ -290,7 +279,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
 
 // SingleChildScrollView(
 // child: Center(

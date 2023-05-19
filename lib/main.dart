@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:group_chat_app/resources/authenticate_method.dart';
 import 'package:group_chat_app/screens/home_page.dart';
 import 'package:group_chat_app/screens/login_screen.dart';
 
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           )),
-      home: LogInScreen(),
+      home: Authenticate(),
     );
   }
 }
