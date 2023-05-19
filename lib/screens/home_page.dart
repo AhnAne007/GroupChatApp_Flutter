@@ -20,15 +20,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final TextEditingController _searchController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  QuerySnapshot? searchSnapshot;
-  DatabaseService databaseService = DatabaseService();
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  Map<String, dynamic>? userMap;
   Stream? groups;
   bool _isLoading = false;
-  String groupName = "";
+  String _groupName = "";
   String userName = "";
 
   String getId(String res) {
@@ -113,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                       : TextField(
                           onChanged: (val) {
                             setState(() {
-                              groupName = val;
+                              _groupName = val;
                             });
                           },
                           style: const TextStyle(color: Colors.black),
@@ -144,14 +139,14 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    if (groupName != "") {
+                    if (_groupName != "") {
                       setState(() {
                         _isLoading = true;
                       });
                       DatabaseService(
                               uid: FirebaseAuth.instance.currentUser!.uid)
                           .createGroup(userName,
-                              FirebaseAuth.instance.currentUser!.uid, groupName)
+                              FirebaseAuth.instance.currentUser!.uid, _groupName)
                           .whenComplete(() {
                         _isLoading = false;
                       });
