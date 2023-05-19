@@ -20,6 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  QuerySnapshot? searchSnapshot;
   DatabaseService databaseService = DatabaseService();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   Map<String, dynamic>? userMap;
@@ -40,6 +41,41 @@ class _HomePageState extends State<HomePage> {
       });
     });
   }
+
+  initiateSearchMethod() async {
+    if (_searchController.text.isNotEmpty) {
+      setState(() {
+        _isLoading = true;
+      });
+      await DatabaseService()
+          .searchByName(_searchController.text)
+          .then((snapshot) {
+        setState(() {
+          searchSnapshot = snapshot;
+          _isLoading = false;
+          //hasUserSearched = true;
+        });
+      });
+    }
+  }
+
+  groupListFromDatabase() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: searchSnapshot!.docs.length,
+      itemBuilder: (context, index) {
+        // return groupTileFromDatabase(
+        //   userName,
+        //   searchSnapshot!.docs[index]['groupId'],
+        //   searchSnapshot!.docs[index]['groupName'],
+        //   searchSnapshot!.docs[index]['admin'],
+        // );
+      },
+    );
+  }
+
+
+
 
   String getId(String res) {
     return res.substring(0, res.indexOf("_"));
@@ -75,7 +111,7 @@ class _HomePageState extends State<HomePage> {
             IconButton(
                 onPressed: () async {
                   await AuthMethods().loginOut();
-                  Navigator.pop(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
@@ -90,7 +126,7 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
           title: const Text("Chats"),
         ),
-        body: groupList(),
+        body: groupListFromAdmin(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           backgroundColor: Colors.deepOrangeAccent,
@@ -180,74 +216,103 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  groupList() {
+  groupListFromAdmin() {
     Size size = MediaQuery.of(context).size;
-    return
-      StreamBuilder(
-        stream: groups,
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data['groups'] != null) {
-              if (snapshot.data['groups'].length != 0) {
-                return ListView.builder(
-                  itemCount: snapshot.data['groups'].length,
-                  itemBuilder: (context, index) {
-                    int reverseIndex =
-                        snapshot.data['groups'].length - index - 1;
-                    return Column(
-                      children: [
-                        Container(
-                          width: size.width - 90,
-                          height: size.height * 0.01,
-                        ),
-                        RoundedInputField(
-                          textEditingController: _searchController,
-                          hintText: 'Search by email',
-                          icon: Icons.search,
-                          onChanged: (String value) {},
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 150, vertical: 10),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.lightGreenAccent[400],
+    return StreamBuilder(
+      stream: groups,
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data['groups'] != null) {
+            if (snapshot.data['groups'].length != 0) {
+              return ListView.builder(
+                itemCount: snapshot.data['groups'].length,
+                itemBuilder: (context, index) {
+                  int reverseIndex = snapshot.data['groups'].length - index - 1;
+                  return Column(
+                    children: [
+                      Container(
+                        width: size.width - 90,
+                        height: size.height * 0.01,
+                      ),
+                      RoundedInputField(
+                        textEditingController: _searchController,
+                        hintText: 'Search the group',
+                        icon: Icons.search,
+                        onChanged: (String value) {},
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 150, vertical: 10),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.lightGreenAccent[400],
 //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                                textStyle: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold)),
-                            onPressed: () {
-                              searchUser();
-                            },
-                            child: Text(
-                              "Search".toUpperCase(),
-                              style: TextStyle(color: Colors.white),
-                            ),
+                              textStyle: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                          onPressed: () {
+                            searchUser();
+                          },
+                          child: Text(
+                            "Search".toUpperCase(),
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
-                        GroupTile(
-                            groupId:
-                                getId(snapshot.data['groups'][reverseIndex]),
-                            groupName:
-                                getName(snapshot.data['groups'][reverseIndex]),
-                            userName: snapshot.data['name']),
-                      ],
-                    );
-                  },
-                );
-              } else {
-                return noGroupWidget();
-              }
+                      ),
+                      GroupTile(
+                          groupId: getId(snapshot.data['groups'][reverseIndex]),
+                          groupName:
+                              getName(snapshot.data['groups'][reverseIndex]),
+                          userName: snapshot.data['name']),
+                    ],
+                  );
+                },
+              );
             } else {
-              return noGroupWidget();
+              return Column(
+                children: [
+                  Container(
+                    width: size.width - 90,
+                    height: size.height * 0.01,
+                  ),
+                  RoundedInputField(
+                    textEditingController: _searchController,
+                    hintText: 'Search the group',
+                    icon: Icons.search,
+                    onChanged: (String value) {},
+                  ),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 150, vertical: 10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.lightGreenAccent[400],
+//padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                          textStyle: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        searchUser();
+                      },
+                      child: Text(
+                        "Search".toUpperCase(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  noGroupWidget(),
+                ],
+              );
             }
           } else {
-            return Center(
-              child: CircularProgressIndicator(
-                  color: Theme.of(context).primaryColor),
-            );
+            return noGroupWidget();
           }
-        },
-      );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor),
+          );
+        }
+      },
+    );
   }
 
   noGroupWidget() {
@@ -280,54 +345,5 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// SingleChildScrollView(
-// child: Center(
-// child: Column(
-// children: [
-// Container(
-// width: size.width - 90,
-// height: size.height * 0.01,
-// ),
-// RoundedInputField(
-// textEditingController: _searchController,
-// hintText: 'Search by email',
-// icon: Icons.search,
-// onChanged: (String value) {},
-// ),
-// Container(
-// padding: EdgeInsets.symmetric(horizontal: 150, vertical: 10),
-// child: ElevatedButton(
-// style: ElevatedButton.styleFrom(
-// backgroundColor: Colors.lightGreenAccent[400],
-// //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-// textStyle:
-// TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-// onPressed: () {
-// searchUser();
-// },
-// child: Text(
-// "Search".toUpperCase(),
-// style: TextStyle(color: Colors.white),
-// ),
-// ),
-// ),
-// userMap?.isEmpty == false
-// ? ListTile(
-// onTap: () {},
-// leading: Icon(Icons.account_box, color: Colors.black),
-// title: Text(
-// userMap!['name'],
-// style: TextStyle(
-// color: Colors.black,
-// fontSize: 17,
-// fontWeight: FontWeight.w500,
-// ),
-// ),
-// subtitle: Text(userMap!['email']),
-// trailing: Icon(Icons.chat, color: Colors.black),
-// )
-// : Container(),
-// ],
-// ),
-// ),
-// ),
+
+

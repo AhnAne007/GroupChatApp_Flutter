@@ -35,6 +35,10 @@ class DatabaseService {
     return userCollection.doc(uid).snapshots();
   }
 
+  searchByName(String groupName) {
+    return groupCollection.where("groupName", isEqualTo: groupName).get();
+  }
+
   Future createGroup(String userName, String id, String groupName) async {
     DocumentReference groupDocumentReference = await groupCollection.add({
       "groupName": groupName,
@@ -65,6 +69,47 @@ class DatabaseService {
         .orderBy("time")
         .snapshots();
   }
+
+  Future<bool> isUserJoined(
+      String groupName, String groupId, String userName) async {
+    DocumentReference userDocumentReference = userCollection.doc(uid);
+    DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+
+    List<dynamic> groups = await documentSnapshot['groups'];
+    if (groups.contains("${groupId}_$groupName")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future toggleGroupJoin(
+      String groupId, String userName, String groupName) async {
+    // doc reference
+    DocumentReference userDocumentReference = userCollection.doc(uid);
+    DocumentReference groupDocumentReference = groupCollection.doc(groupId);
+
+    DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+    List<dynamic> groups = await documentSnapshot['groups'];
+
+    // if user has our groups -> then remove then or also in other part re join
+    if (groups.contains("${groupId}_$groupName")) {
+      await userDocumentReference.update({
+        "groups": FieldValue.arrayRemove(["${groupId}_$groupName"])
+      });
+      await groupDocumentReference.update({
+        "members": FieldValue.arrayRemove(["${uid}_$userName"])
+      });
+    } else {
+      await userDocumentReference.update({
+        "groups": FieldValue.arrayUnion(["${groupId}_$groupName"])
+      });
+      await groupDocumentReference.update({
+        "members": FieldValue.arrayUnion(["${uid}_$userName"])
+      });
+    }
+  }
+
 
   Future getGroupAdmin(String groupId) async {
     DocumentReference d = groupCollection.doc(groupId);

@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../resources/database_service.dart';
@@ -21,8 +25,12 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   Stream<QuerySnapshot>? chats;
-  TextEditingController messageController = TextEditingController();
   String admin = "";
+  final TextEditingController _message = TextEditingController();
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+
+  late String textToCopy;
 
   @override
   void initState() {
@@ -43,14 +51,49 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
+  //a future function to select a file from the gallery and then assigning to the picked file
+  Future onPickFile() async {
+    final file = await FilePicker.platform.pickFiles();
+    if (file == null)
+      return null;
+    else {
+      setState(() {
+        pickedFile = file.files.first;
+      });
+    }
+  }
+
+  //A function to upload a file in firebase storage
+  Future onUploadFile() async {
+    try {
+      final path = 'files/${pickedFile?.name}';
+      final file2 = File(pickedFile!.path!);
+      print("hi after the file is picked");
+      final ref = FirebaseStorage.instance.ref().child(path);
+      uploadTask = ref.putFile(file2);
+      print("hi after the file is uploaded");
+
+      final snapshot = await uploadTask!.whenComplete(() {});
+      final urlDownload = await snapshot.ref.getDownloadURL();
+      setState(() {
+        _message.text = urlDownload;
+      });
+    } on FirebaseException catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor:Colors.lime[50],
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
         title: Text(widget.groupName),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.lightGreenAccent[700],
         actions: [
           IconButton(
               onPressed: () {
@@ -67,50 +110,53 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Stack(
         children: <Widget>[
-          // chat messages here
           chatMessages(),
           Container(
+            //height: size.height / 10,
+            width: size.width,
             alignment: Alignment.bottomCenter,
-            width: MediaQuery.of(context).size.width,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-              width: MediaQuery.of(context).size.width,
-              color: Colors.grey[700],
-              child: Row(children: [
-                Expanded(
-                    child: TextFormField(
-                      controller: messageController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        hintText: "Send a message...",
-                        hintStyle: TextStyle(color: Colors.white, fontSize: 16),
-                        border: InputBorder.none,
-                      ),
-                    )),
-                const SizedBox(
-                  width: 12,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    sendMessage();
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: const Center(
-                        child: Icon(
-                          Icons.send,
-                          color: Colors.white,
-                        )),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              height: 70.0,
+              color: Colors.white,
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 15,
                   ),
-                )
-              ]),
+                  IconButton(
+                    icon: Icon(Icons.attach_file),
+                    iconSize: 25.0,
+                    color: Colors.black,
+                    onPressed: () {
+                      onPickFile();
+                      // print(pickedFile?.name);
+                      onUploadFile();
+//                        onSendMessage();
+                    },
+                  ),
+                  Expanded(
+                    child: TextField(
+                      textCapitalization: TextCapitalization.sentences,
+                      controller: _message,
+                      onChanged: (value) {},
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'Send a message...',
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.send),
+                    iconSize: 25.0,
+                    color: Colors.grey,
+                    onPressed: () {
+                      sendMessage();
+                    },
+                  ),
+                ],
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -137,16 +183,16 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   sendMessage() {
-    if (messageController.text.isNotEmpty) {
+    if (_message.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
-        "message": messageController.text,
+        "message": _message.text,
         "sender": widget.userName,
         "time": DateTime.now().millisecondsSinceEpoch,
       };
 
       DatabaseService().sendMessage(widget.groupId, chatMessageMap);
       setState(() {
-        messageController.clear();
+        _message.clear();
       });
     }
   }
