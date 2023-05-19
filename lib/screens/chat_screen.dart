@@ -12,11 +12,12 @@ class ChatScreen extends StatefulWidget {
   final String groupId;
   final String groupName;
   final String userName;
+
   const ChatScreen(
       {Key? key,
-        required this.groupId,
-        required this.groupName,
-        required this.userName})
+      required this.groupId,
+      required this.groupName,
+      required this.userName})
       : super(key: key);
 
   @override
@@ -87,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor:Colors.lime[50],
+      backgroundColor: Colors.lime[50],
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
@@ -110,12 +111,13 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Stack(
         children: <Widget>[
           chatMessages(),
+          SizedBox(height: 10,),
           Container(
             //height: size.height / 10,
             width: size.width,
             alignment: Alignment.bottomCenter,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               height: 70.0,
               color: Colors.white,
               child: Row(
@@ -131,7 +133,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       onPickFile();
                       // print(pickedFile?.name);
                       onUploadFile();
-//                        onSendMessage();
                     },
                   ),
                   Expanded(
@@ -167,15 +168,16 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (context, AsyncSnapshot snapshot) {
         return snapshot.hasData
             ? ListView.builder(
-          itemCount: snapshot.data.docs.length,
-          itemBuilder: (context, index) {
-            return MessageTile(
-                message: snapshot.data.docs[index]['message'],
-                sender: snapshot.data.docs[index]['sender'],
-                sentByMe: widget.userName ==
-                    snapshot.data.docs[index]['sender']);
-          },
-        )
+                shrinkWrap: true,
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  return MessageTile(
+                      message: snapshot.data.docs[index]['message'],
+                      sender: snapshot.data.docs[index]['sender'],
+                      sentByMe: widget.userName ==
+                          snapshot.data.docs[index]['sender']);
+                },
+              )
             : Container();
       },
     );

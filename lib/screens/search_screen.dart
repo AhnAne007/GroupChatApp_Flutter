@@ -156,7 +156,7 @@ class _SearchScreenState extends State<SearchScreen> {
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       leading: CircleAvatar(
         radius: 30,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.red[700],
         child: Text(
           groupName.substring(0, 1).toUpperCase(),
           style: const TextStyle(color: Colors.white),
@@ -207,7 +207,7 @@ class _SearchScreenState extends State<SearchScreen> {
             : Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Theme.of(context).primaryColor,
+            color: Colors.amberAccent,
           ),
           padding:
           const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

@@ -57,19 +57,36 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.lime[50],
       appBar: AppBar(
         actions: [
-          IconButton(
-              onPressed: () async {
-                await AuthMethods().loginOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return LogInScreen();
-                    },
-                  ),
-                );
-              },
-              icon: const Icon(Icons.logout)),
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () async {
+                    await AuthMethods().loginOut();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return LogInScreen();
+                        },
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.logout)),
+              IconButton(
+                  onPressed: () async {
+                    await AuthMethods().loginOut();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return HomePage();
+                        },
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.refresh)),
+            ],
+          ),
         ],
         backgroundColor: Colors.lightGreenAccent[700],
         centerTitle: true,
@@ -145,8 +162,10 @@ class _HomePageState extends State<HomePage> {
                       });
                       DatabaseService(
                               uid: FirebaseAuth.instance.currentUser!.uid)
-                          .createGroup(userName,
-                              FirebaseAuth.instance.currentUser!.uid, _groupName)
+                          .createGroup(
+                              userName,
+                              FirebaseAuth.instance.currentUser!.uid,
+                              _groupName)
                           .whenComplete(() {
                         _isLoading = false;
                       });
@@ -167,16 +186,56 @@ class _HomePageState extends State<HomePage> {
 
   groupListFromAdmin() {
     Size size = MediaQuery.of(context).size;
-    return StreamBuilder(
-      stream: groups,
-      builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data['groups'] != null) {
-            if (snapshot.data['groups'].length != 0) {
-              return ListView.builder(
-                itemCount: snapshot.data['groups'].length,
-                itemBuilder: (context, index) {
-                  int reverseIndex = snapshot.data['groups'].length - index - 1;
+    return Column(
+      children: [
+        Container(
+          width: size.width - 90,
+          height: size.height * 0.01,
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightGreenAccent[400],
+//padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                textStyle:
+                    TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return SearchScreen();
+                  },
+                ),
+              );
+            },
+            child: Text(
+              "Go To Search Page".toUpperCase(),
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        StreamBuilder(
+          stream: groups,
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data['groups'] != null) {
+                if (snapshot.data['groups'].length != 0) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data['groups'].length,
+                    itemBuilder: (context, index) {
+                      int reverseIndex =
+                          snapshot.data['groups'].length - index - 1;
+                      return GroupTile(
+                          groupId: getId(snapshot.data['groups'][reverseIndex]),
+                          groupName:
+                              getName(snapshot.data['groups'][reverseIndex]),
+                          userName: snapshot.data['name']);
+                    },
+                  );
+                } else {
                   return Column(
                     children: [
                       Container(
@@ -208,61 +267,22 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      GroupTile(
-                          groupId: getId(snapshot.data['groups'][reverseIndex]),
-                          groupName:
-                              getName(snapshot.data['groups'][reverseIndex]),
-                          userName: snapshot.data['name']),
+                      noGroupWidget(),
                     ],
                   );
-                },
-              );
+                }
+              } else {
+                return noGroupWidget();
+              }
             } else {
-              return Column(
-                children: [
-                  Container(
-                    width: size.width - 90,
-                    height: size.height * 0.01,
-                  ),
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 100, vertical: 10),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.lightGreenAccent[400],
-//padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                          textStyle: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return SearchScreen();
-                            },
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "Go To Search Page".toUpperCase(),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  noGroupWidget(),
-                ],
+              return Center(
+                child: CircularProgressIndicator(
+                    color: Theme.of(context).primaryColor),
               );
             }
-          } else {
-            return noGroupWidget();
-          }
-        } else {
-          return Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor),
-          );
-        }
-      },
+          },
+        ),
+      ],
     );
   }
 
