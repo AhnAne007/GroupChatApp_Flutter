@@ -2,10 +2,10 @@
 
 A Flutter project for the Group Chat App.
 
-## Getting Started
+## Architecture Diagram
 
 First of all the Architecture diagram is attached below to have an idea related to the application.
-![ChatAppArchitect](https://user-images.githubusercontent.com/89075855/236206341-a937a207-148a-4597-adb2-8c1f87360b68.png)
+![ChatAppArchitect](https://github.com/AhnAne007/GroupChatApp_Flutter/assets/89075855/98bce0b6-af2d-4a64-8f12-0a6f52a2c461)
 
 
 ## Features
